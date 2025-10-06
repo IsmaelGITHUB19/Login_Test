@@ -1,0 +1,40 @@
+session_start();
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $conn = conect_banco();     
+    verifica_dados($conn);      
+    $conn->close();            
+} else {
+    echo "Acesso inválido.";
+}
+function conect_banco(){
+        $servername = "localhost";
+        $username   = "root";
+        $password   = "";
+        $database   = "consumo_energia";
+        $conn = new mysqli($servername, $username, $password, $database);
+        if ($conn->connect_error) {
+            die("Falha na conexão: " . $conn->connect_error);
+        }
+    
+        return $conn;
+    }
+    function verifica_dados($conn){
+        $email = $_POST['email'];
+        $senha = $_POST['senha'];
+    
+        // aplica md5 para comparar com o que está salvo
+        $senha_md5 = md5($senha);
+    
+        $sql = "SELECT * FROM user WHERE REGISTRO='$email' AND SENHA='$senha_md5' LIMIT 1";
+    
+        $result = $conn->query($sql);
+    
+        if ($result->num_rows > 0) {
+            header("Location: index.php");
+            exit;
+        } else {
+            echo "Email ou senha incorretos.";
+        }
+    }
+    
+?>
