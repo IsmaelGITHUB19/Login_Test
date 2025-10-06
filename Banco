@@ -1,8 +1,46 @@
-CREATE DATABASE BANCO;
-USE BANCO;
-CREATE TABLE USUARIOS(
-ID INT AUTO_INCREMENT PRIMARY KEY,
-EMAIL VARCHAR (100),
-SENHA VARCHAR (100)
-);
-INSERT INTO USUARIOS (EMAIL, SENHA) VALUES ('Ismaelelger@hotmail', '31290dj09');
+<?php 
+        $servername = "localhost";
+        $username   = "root";
+        $password   = "";
+        $database = "consumo_energia";
+       $conn = new mysqli($servername, $username, $password, $database);
+
+       $sql = "CREATE TABLE IF NOT EXISTS cliente (
+            ID INT (3) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+            NOME VARCHAR (30),
+            SEXO VARCHAR (10),
+            ENDERECO VARCHAR (20),
+            CEP VARCHAR (15),
+            BAIRRO VARCHAR (20),
+            CPF VARCHAR (20),
+            NASCIMENTO DATE,
+            VENCIMENTO DATE,
+            UNIDADE VARCHAR (30),
+            EMAIL VARCHAR (30),
+            KWH INT (4),
+            VALOR INT (5)
+       
+       )";
+       if ($conn -> query($sql)){
+         echo "Tabela foi criada";
+       }
+       else {
+         echo "Problemas";
+       }
+
+    $sql = "CREATE TABLE IF NOT EXISTS user(
+        ID INT (3) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+        NOME VARCHAR (30),
+        REGISTRO VARCHAR (30) NOT NULL,
+        SENHA INT (10)
+    
+    )";
+    if ($conn -> query($sql)){
+         echo "Tabela foi criada";
+       }
+       else {
+         echo "Problemas";
+       }
+
+
+?>
