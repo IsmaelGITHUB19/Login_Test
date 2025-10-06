@@ -1,0 +1,62 @@
+<?php
+session_start();
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $conn = conect_banco();     
+    insert($conn);      
+    $conn->close();            
+} else {
+    echo "Acesso inválido.";
+}
+
+function conect_banco(){
+    $servername = "localhost";
+    $username   = "root";
+    $password   = "";
+    $database   = "consumo_energia";
+    $conn = new mysqli($servername, $username, $password, $database);
+    if ($conn->connect_error) {
+        die("Falha na conexão: " . $conn->connect_error);
+    }
+    return $conn;
+}
+
+function insert($conn) {
+    // Insert usuário
+    $sql_user = "INSERT INTO user (NOME, REGISTRO, SENHA) VALUES (
+        '" . $_POST['nome'] . "',
+        '" . $_POST['email'] . "',
+        md5('" . $_POST['senha'] . "')
+    )";
+
+    // Insert cliente
+    $sql_cliente = "INSERT INTO cliente 
+        (EMAIL, NOME, SEXO, ENDERECO, CEP, BAIRRO, CPF, NASCIMENTO, VENCIMENTO, UNIDADE, KWH, VALOR) 
+        VALUES 
+        ('" . $_POST['email'] . "',
+         '" . $_POST['nome'] . "',
+         '" . $_POST['sexo'] . "',
+         '" . $_POST['endereco'] . "',
+         '" . $_POST['cep'] . "',
+         '" . $_POST['bairro'] . "',
+         '" . $_POST['cpf'] . "',
+         '" . $_POST['nascimento'] . "',
+         '" . $_POST['vencimento'] . "',
+         '" . $_POST['unidade'] . "',
+         '" . $_POST['kwh'] . "',
+         '" . $_POST['valor'] . "')";
+
+    // Executa ambos inserts
+    if ($conn->query($sql_user) === TRUE && $conn->query($sql_cliente) === TRUE) {
+        echo "Cliente e usuário cadastrados com sucesso!";
+    } else {
+        echo "Erro ao cadastrar: " . $conn->error;
+    }
+}
+?>
+
+<html>
+    <body>
+        <a href="Index.php"><input type="button" value="Voltar"></a>
+    </body>
+</html>
